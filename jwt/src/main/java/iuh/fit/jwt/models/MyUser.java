@@ -1,8 +1,6 @@
 package iuh.fit.jwt.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -12,6 +10,8 @@ public class MyUser {
     @Id
     @GeneratedValue
     private long id;
+    // set unit
+    @Column(unique = true)
     private String username;
     private String password;
     private String role;

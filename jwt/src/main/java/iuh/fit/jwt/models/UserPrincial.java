@@ -1,5 +1,6 @@
 package iuh.fit.jwt.models;
 
+import iuh.fit.jwt.utils.Jwt;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,20 +9,34 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class UserPrincial implements UserDetails {
     private long id;
     private String username;
     private String password;
     private Collection authorities;
 
-    UserPrincial(MyUser user) {
+    public UserPrincial(MyUser user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
     }
+
+    @Override
+    public Collection getAuthorities() {
+        return authorities;
+    }
+    @Override
+    public String getUsername() {
+        return username;
+    }
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -42,4 +57,5 @@ public class UserPrincial implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
 }
