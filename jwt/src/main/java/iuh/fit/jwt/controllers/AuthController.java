@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -29,12 +29,22 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login(@RequestBody MyUser user) {
-        System.out.println(user);
         MyUser myUser = userService.getMyUserFromUsername(user.getUsername());
+        if (myUser == null)
+            return "User not found";
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+        if (!bCryptPasswordEncoder.matches(user.getPassword(), myUser.getPassword()))
+            return "Wrong password";
+
         UserPrincial userPrincial = new UserPrincial(myUser);
-        System.out.println(userPrincial);
         String token = Jwt.generateToken(userPrincial);
         return token;
+    }
+
+    @GetMapping("/checkToken")
+    public boolean checkToken(@RequestHeader(name = "token") String token) {
+        return !Jwt.isTokenExpired(token);
     }
     @GetMapping("/hello")
     public String hello(@RequestHeader(name = "token") String token) {

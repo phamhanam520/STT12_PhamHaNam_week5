@@ -27,8 +27,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth ->
                 auth
-                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/register/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
+                        //needn't authenticate
+                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated());
         http.httpBasic(Customizer.withDefaults());
         http.headers(headers -> headers.disable());
